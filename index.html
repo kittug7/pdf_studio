@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF Studio – offline PDF tools for Windows</title>
+<meta name="description" content="Merge, split, compress, convert, protect and edit PDFs on your own PC. 21 tools, a conversion dashboard and a 90-day free trial.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%93%84%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f7fb; --surface:#ffffff; --ink:#101828; --muted:#4b5565; --line:#e3e6ee;
+  --accent:#4f46e5; --accent-ink:#ffffff; --accent-soft:#eceafd;
+  --pdf:#ef4444; --word:#2563eb; --jpg:#f59e0b; --xls:#16a34a; --png:#8b5cf6;
+  --shadow:0 18px 40px -18px rgba(16,24,40,.28);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0c111d; --surface:#151b2b; --ink:#f2f4f9; --muted:#a3adc2; --line:#262e42;
+    --accent:#8b83ff; --accent-ink:#0c111d; --accent-soft:#1d2140; --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0c111d; --surface:#151b2b; --ink:#f2f4f9; --muted:#a3adc2; --line:#262e42;
+  --accent:#8b83ff; --accent-ink:#0c111d; --accent-soft:#1d2140; --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 "Segoe UI Variable","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:28px;height:64px}
+.brand{font-weight:700;font-size:1.15rem;letter-spacing:-.01em;text-decoration:none;display:flex;gap:8px;align-items:center}
+.brand i{font-style:normal;color:var(--pdf)}
+.nav nav{margin-left:auto;display:flex;gap:22px;align-items:center}
+.nav nav a{text-decoration:none;color:var(--muted);font-size:.95rem}
+.nav nav a:hover{color:var(--ink)}
+.btn{display:inline-block;padding:12px 22px;border-radius:10px;font-weight:600;text-decoration:none;border:1px solid transparent;cursor:pointer;font:inherit;font-weight:600}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.ghost{border-color:var(--line);background:var(--surface)}
+.btn.ghost:hover{border-color:var(--accent)}
+.btn.sm{padding:8px 16px;font-size:.92rem}
+#theme{background:none;border:1px solid var(--line);color:var(--ink);border-radius:8px;width:36px;height:36px;cursor:pointer;font-size:1rem}
+
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:84px 0 72px}
+h1{font-size:clamp(2.3rem,5vw,3.6rem);line-height:1.06;letter-spacing:-.03em;margin:0 0 20px;font-weight:750}
+.lead{font-size:1.15rem;color:var(--muted);max-width:34em;margin:0 0 30px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.fine{color:var(--muted);font-size:.9rem;margin:0}
+
+/* dashboard mockup – the one showpiece */
+.shot{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
+.bar{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.bar span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.app{display:grid;grid-template-columns:128px 1fr;min-height:330px}
+.side{background:#111827;color:#cbd5e1;padding:16px 12px;font-size:.78rem;display:flex;flex-direction:column;gap:4px}
+.side b{color:#fff;font-size:.9rem;margin-bottom:10px}
+.side div{padding:6px 8px;border-radius:6px}
+.side .on{background:var(--accent);color:#fff}
+.side .trial{margin-top:auto;color:#fbbf24;font-weight:600;padding:0 8px}
+.side .meter{height:5px;border-radius:3px;background:#374151;margin:4px 8px 0}
+.side .meter i{display:block;height:100%;width:81%;background:#fbbf24;border-radius:3px}
+.main{padding:18px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.kpis div{border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.7rem;color:var(--muted)}
+.kpis strong{display:block;font-size:1.25rem;color:var(--ink)}
+.row{display:grid;grid-template-columns:62px 1fr 34px;gap:8px;align-items:center;font-size:.76rem;margin:9px 0;color:var(--muted)}
+.row u{display:block;height:14px;border-radius:4px;text-decoration:none;width:var(--w);background:var(--c)}
+.row em{font-style:normal;font-weight:700;color:var(--ink)}
+.cap{font-size:.7rem;color:var(--muted);margin:10px 0 0}
+
+section{padding:72px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(1.6rem,3vw,2.15rem);letter-spacing:-.02em;line-height:1.15;margin:0 0 12px}
+.sub{color:var(--muted);max-width:40em;margin:0 0 40px}
+
+.tools{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line);border-radius:14px;background:var(--surface);overflow:hidden}
+.tools div{padding:24px 26px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.tools div:nth-child(3n){border-right:0}
+.tools div:nth-last-child(-n+3){border-bottom:0}
+.tools h3{margin:0 0 10px;font-size:1rem}
+.tools ul{margin:0;padding:0;list-style:none;color:var(--muted);font-size:.95rem}
+.tools li{padding:3px 0}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.facts{display:grid;gap:22px}
+.facts h3{margin:0 0 4px;font-size:1.05rem}
+.facts p{margin:0;color:var(--muted)}
+.steps{counter-reset:s;list-style:none;margin:0;padding:0;display:grid;gap:18px}
+.steps li{counter-increment:s;display:grid;grid-template-columns:36px 1fr;gap:14px}
+.steps li::before{content:counter(s);width:36px;height:36px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:700}
+.steps b{display:block}
+.steps span{color:var(--muted);font-size:.95rem}
+.get{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px}
+.get p{color:var(--muted);margin:0 0 20px}
+.specs{margin:20px 0 0;padding:16px 0 0;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem}
+
+details{border-bottom:1px solid var(--line);padding:16px 0}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+summary::after{content:"+";color:var(--accent);font-size:1.3rem;line-height:1}
+details[open] summary::after{content:"–"}
+details p{color:var(--muted);margin:10px 0 0;max-width:46em}
+
+footer{border-top:1px solid var(--line);padding:32px 0;color:var(--muted);font-size:.92rem}
+.foot{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+.foot a{color:var(--accent)}
+
+@media (max-width:900px){
+  .hero,.pair{grid-template-columns:1fr;gap:40px}
+  .hero{padding-top:48px}
+  .tools{grid-template-columns:1fr 1fr}
+  .tools div,.tools div:nth-child(3n){border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .tools div:nth-child(2n){border-right:0}
+  .tools div:nth-last-child(-n+2){border-bottom:0}
+  .nav nav a.hide{display:none}
+}
+@media (max-width:560px){
+  .tools{grid-template-columns:1fr}
+  .tools div,.tools div:nth-child(2n){border-right:0;border-bottom:1px solid var(--line)}
+  .tools div:last-child{border-bottom:0}
+  .app{grid-template-columns:1fr}.side{display:none}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#top"><i>❤</i> PDF Studio</a>
+    <nav aria-label="Main">
+      <a class="hide" href="#tools">Tools</a>
+      <a class="hide" href="#dashboard">Dashboard</a>
+      <a class="hide" href="#faq">FAQ</a>
+      <button id="theme" type="button" aria-label="Switch colour theme">◐</button>
+      <a class="btn primary sm" href="#download">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div>
+      <h1>PDF tools that stay on your PC.</h1>
+      <p class="lead">Merge, split, compress, convert, protect and edit PDFs without uploading a single file. PDF Studio runs offline on Windows and keeps count of everything you convert.</p>
+      <div class="cta">
+        <a class="btn primary" href="#download">Download for Windows</a>
+        <a class="btn ghost" href="#tools">See all 21 tools</a>
+      </div>
+      <p class="fine">Free for 90 days. Windows 10 and 11.</p>
+    </div>
+    <div class="shot" role="img" aria-label="PDF Studio dashboard showing converted files by type, with 73 days of trial left">
+      <div class="bar" aria-hidden="true"><span></span><span></span><span></span></div>
+      <div class="app" aria-hidden="true">
+        <div class="side"><b>❤ PDF Studio</b><div class="on">Dashboard</div><div>All tools</div><div>Organize</div><div>Optimize</div><div>Convert</div><div>Security</div>
+          <div class="trial">73 days left</div><div class="meter"><i></i></div></div>
+        <div class="main">
+          <div class="kpis"><div><strong>303</strong>Files converted</div><div><strong>PDF</strong>Top type</div><div><strong>5</strong>File types</div></div>
+          <div class="row"><span>PDF</span><u style="--w:100%;--c:var(--pdf)"></u><em>128</em></div>
+          <div class="row"><span>Word</span><u style="--w:58%;--c:var(--word)"></u><em>74</em></div>
+          <div class="row"><span>JPG</span><u style="--w:41%;--c:var(--jpg)"></u><em>52</em></div>
+          <div class="row"><span>Excel</span><u style="--w:24%;--c:var(--xls)"></u><em>31</em></div>
+          <div class="row"><span>PNG</span><u style="--w:14%;--c:var(--png)"></u><em>18</em></div>
+          <p class="cap">Sample figures</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="tools"><div class="wrap">
+    <h2>Everything you do with PDFs</h2>
+    <p class="sub">Twenty-one tools in six groups. Pick one, add your files and click once.</p>
+    <div class="tools">
+      <div><h3>Organize</h3><ul><li>Merge PDF</li><li>Split PDF</li><li>Remove pages</li><li>Extract pages</li></ul></div>
+      <div><h3>Optimize</h3><ul><li>Compress PDF</li><li>Repair PDF</li></ul></div>
+      <div><h3>Convert to PDF</h3><ul><li>JPG to PDF</li><li>Word to PDF</li><li>PowerPoint to PDF</li><li>Excel to PDF</li><li>HTML to PDF</li></ul></div>
+      <div><h3>Convert from PDF</h3><ul><li>PDF to JPG or PNG</li><li>PDF to Word</li><li>PDF to Excel</li></ul></div>
+      <div><h3>Edit</h3><ul><li>Rotate PDF</li><li>Add page numbers</li><li>Add watermark</li><li>Crop PDF</li></ul></div>
+      <div><h3>Security</h3><ul><li>Protect PDF with AES-256</li><li>Unlock PDF</li></ul></div>
+    </div>
+  </div></section>
+
+  <section id="dashboard"><div class="wrap pair">
+    <div>
+      <h2>Your files never leave your computer</h2>
+      <p class="sub">Every tool runs locally. There is no upload, no queue and no file-size limit from a server.</p>
+    </div>
+    <div class="facts">
+      <div><h3>See what you’ve converted</h3><p>The dashboard counts the files you create by type (PDF, Word, Excel, JPG, PNG) and lists your recent activity.</p></div>
+      <div><h3>Personal accounts</h3><p>Each person signs in with their own account, so every dashboard shows only their own numbers.</p></div>
+      <div><h3>90 days to try everything</h3><p>The trial starts when you create your account, and the days left are always visible in the sidebar.</p></div>
+    </div>
+  </div></section>
+
+  <section id="download"><div class="wrap pair">
+    <div>
+      <h2>Up and running in three steps</h2>
+      <p class="sub">No installer to configure and no cloud account to set up.</p>
+      <ol class="steps">
+        <li><div><b>Download and unzip</b><span>Extract the PDFStudio folder anywhere on your PC.</span></div></li>
+        <li><div><b>Create your account</b><span>Your 90-day trial begins automatically.</span></div></li>
+        <li><div><b>Open a tool</b><span>Add your files, choose options and save the result.</span></div></li>
+      </ol>
+    </div>
+    <div class="get">
+      <h2 style="font-size:1.5rem">PDF Studio for Windows</h2>
+      <p>Includes all 21 tools, the conversion dashboard and the 90-day trial.</p>
+      <a class="btn primary" href="PDFStudio.zip" download>Download PDFStudio.zip</a>
+      <div class="specs">Requires Windows 10 or 11. Word, PowerPoint and Excel conversion uses Microsoft Office or LibreOffice. HTML to PDF uses Microsoft Edge or Google Chrome.</div>
+    </div>
+  </div></section>
+
+  <section id="faq"><div class="wrap">
+    <h2>Questions</h2>
+    <p class="sub">Short answers to the common ones.</p>
+    <details><summary>Does it need an internet connection?</summary><p>No. All tools work offline. The only exception is HTML to PDF when you enter a web address, because the page has to be fetched.</p></details>
+    <details><summary>What happens after the 90-day trial?</summary><p>The tools pause and a message explains that a licence is needed. You can still open the dashboard and see your history.</p></details>
+    <details><summary>Can I convert password-protected PDFs?</summary><p>Yes, once you have removed the password with the Unlock PDF tool. You need to know the password.</p></details>
+    <details><summary>Does PDF to Word work on scanned documents?</summary><p>It works best on PDFs that contain real text. Scanned pages are kept as images, because text recognition is not included yet.</p></details>
+    <details><summary>Where is my data stored?</summary><p>Accounts, the trial date and your statistics are stored on your own PC in the PDFStudio folder inside your user profile.</p></details>
+  </div></section>
+</main>
+
+<footer><div class="wrap foot">
+  <span>© 2026 K. Gopi Krishna. All rights reserved.</span>
+  <span>Questions or licences: <a href="mailto:gpkrishna52@gmail.com">gpkrishna52@gmail.com</a></span>
+</div></footer>
+
+<script>
+(function(){
+  var b=document.getElementById('theme'),r=document.documentElement,k='pdfstudio-theme';
+  try{var s=localStorage.getItem(k);if(s)r.setAttribute('data-theme',s)}catch(e){}
+  b.addEventListener('click',function(){
+    var dark=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
+    var n=dark?'light':'dark';r.setAttribute('data-theme',n);
+    try{localStorage.setItem(k,n)}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>
