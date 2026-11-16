@@ -1,0 +1,6 @@
+PyMuPDF>=1.24
+Pillow
+pdf2docx
+openpyxl
+pywin32; sys_platform == "win32"
+pyinstaller
