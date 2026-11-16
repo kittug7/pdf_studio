@@ -38,11 +38,26 @@ On first launch, create an account. Output files are saved to `Documents\PDF Stu
 
 ## Build a standalone .exe
 
+Build on a Windows PC; PyInstaller cannot create a Windows `.exe` from Linux or Mac.
+
+### Option 1: one click with `build_exe.bat` (recommended)
+
+1. Install Python 3.10 or newer from python.org. In the installer, tick **"Add python.exe to PATH"**.
+2. Keep `build_exe.bat`, `main.py` and `requirements.txt` in the same folder.
+3. Double-click `build_exe.bat`.
+
+The script finds Python (it ignores the Microsoft Store shortcut), creates a `venv`, installs the dependencies, cleans old build files, builds the app and opens the output folder. The result is `dist\PDFStudio\PDFStudio.exe`. Share the whole `dist\PDFStudio` folder, not only the `.exe`.
+
+Optional: put an `app.ico` file next to `main.py` and the script uses it as the app icon. For a single-file `.exe`, add `--onefile` to the `pyinstaller` line in the batch file (it then starts more slowly).
+
+### Option 2: manual command
+
 ```bash
-pyinstaller --noconfirm --windowed --name PDFStudio --collect-all pdf2docx --hidden-import win32com.client main.py
+pip install -r requirements.txt
+pyinstaller --noconfirm --windowed --name PDFStudio --collect-all pdf2docx --collect-all pymupdf --hidden-import win32com.client --hidden-import pythoncom main.py
 ```
 
-The result is in `dist\PDFStudio\`. Distribute the whole folder.
+Test the finished build on a PC without Python. Office to PDF still needs Microsoft Office or LibreOffice there, and HTML to PDF needs Edge or Chrome.
 
 ## Project files
 
@@ -50,6 +65,7 @@ The result is in `dist\PDFStudio\`. Distribute the whole folder.
 PDFStudio/
 ├── main.py            # the whole application (UI, tools, accounts, trial, stats)
 ├── requirements.txt   # Python dependencies
+├── build_exe.bat      # one-click build of dist\PDFStudio\PDFStudio.exe
 └── README.md
 ```
 
@@ -85,6 +101,9 @@ Sign-in and the trial are enforced locally on each PC, so they suit a trial or d
 | Problem | Fix |
 |---|---|
 | `ModuleNotFoundError` | Run `pip install -r requirements.txt` |
+| "Python was not found; run without arguments to install from the Microsoft Store" | Real Python is not installed. Install it from python.org with "Add python.exe to PATH" ticked, then run `build_exe.bat` again |
+| Built `.exe` closes immediately or reports a missing module | Rebuild with `--collect-all docx --collect-all openpyxl` added. To see the error, rebuild without `--windowed` and run the `.exe` from a terminal |
+| Antivirus flags the `.exe` | Unsigned PyInstaller apps are sometimes flagged by mistake. Code-signing the `.exe` fixes this |
 | Office to PDF fails | Install Microsoft Office or LibreOffice, and close any open Word/Excel/PowerPoint windows |
 | HTML to PDF fails | Install Microsoft Edge or Google Chrome |
 | "Trial expired" message | The 90 days have passed; a licence is needed to continue |
